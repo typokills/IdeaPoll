@@ -75,13 +75,14 @@ contract Lottery {
     staffAddIdea("Test Idea");
   }
 
-  //Staff has the ability to extend the duration of the opencall
+  //Staff has the ability to extend the duration of the opencall (DONE)
   function extend(uint duration) public {
     require(staffAccount[msg.sender] == true);
 
     expiration = expiration + duration;
   }
 
+  // Returns duration left  (DONE)
   function getExpiration() view public returns (uint){
     return expiration;
   }
@@ -95,6 +96,9 @@ contract Lottery {
     emit newResident(_newresident); 
   }
 
+  function callVerified(address resident)view public returns (bool){
+    return verifiedAcc[resident];
+  }
   //Ideas added by the staff are automatically confirmed
   function staffAddIdea(string memory _newIdea) public {
     //require(staffAccount[msg.sender] == true);

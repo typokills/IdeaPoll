@@ -70,6 +70,28 @@
                           }
                         });
                     });
+
+                    $("a#call_addVerified").click(function(){
+                        var verifiedAddress = $("input#verifiedAddress").val();
+                        contractInstance.addVerified(verifiedAddress, {from:web3.eth.accounts[0]}, function(error, result){
+                          if (error) {
+                              alert("Please, connect to the network");
+                              reject(error);
+                          }
+                        });
+                    });
+
+                    $("a#call_callVerified").click(function(){
+                        var index = $("input#index").val();
+                        contractInstance.callVerified(index,{from:web3.eth.accounts[0]},function(error, result){
+                          if (error) {
+                              alert("Please, connect to the network");
+                              reject(error);
+                          } else {
+                              $("span#verifiedAddressCall").text(result);
+                          }
+                        });
+                    });
                 }
                 else {
                     alert("Please, install Metamask!");
@@ -126,6 +148,16 @@
                 <p>Extend by: <input type="text" id="extension" value="0" /></p>
                   <footer>
                    <a href="#" id="call_extend" class="button special">Extend duration</a>
+                  </footer>
+                  <p>New Address: <input type="text" id="verifiedAddress" value="New Address" /></p>
+                  <footer>
+                    <a href="#" id="call_addVerified" class="button special">Add New Verified Address</a>
+                  </footer>
+
+                  <p><span id="verifiedAddressCall">Nil</span><p></p>
+                  <p>Index: <input type="text" id="index" value="Index" /></p>
+                  <footer>
+                    <a href="#" id="call_callVerified" class="button special">Call Verified Address</a>
                   </footer>
 
   						</article>
