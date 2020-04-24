@@ -112,6 +112,27 @@
                           }
                         });
                     });
+                    $("a#call_staffAddIdea").click(function(){
+                        var newIdeaInput = $("input#newIdeaInput").val();
+                        contractInstance.staffAddIdea(newIdeaInput, {from:web3.eth.accounts[0]}, function(error, result){
+                          if (error) {
+                              alert("Please, connect to the network");
+                              reject(error);
+                          }
+                        });
+                    });
+                    $("a#call_getVotes").click(function(){
+                        var index = $("input#voteCallIndex").val();
+                        contractInstance.getVotes(index,{from:web3.eth.accounts[0]},function(error, result){
+                          if (error) {
+                              alert("Please, connect to the network");
+                              reject(error);
+                          } else {
+                              $("span#ideaVoteCountCall").text(result);
+                          }
+                        });
+                    });
+                    
                 }
                 else {
                     alert("Please, install Metamask!");
@@ -141,8 +162,19 @@
             <div class="flex flex-2">
               <article>
   				            <header>
-  								<h3>Number</h3>
+  								<h3>CONTRACT FUNCTIONS:</h3>
                 </header>
+                
+                <p><span id="ideaVoteCountCall">None</span><p></p>
+                <p>Index: <input type="text" id="voteCallIndex" value="0" /></p>
+                <footer>
+                  <a href="#" id="call_getVotes" class="button special">Check Votes</a>
+                </footer>
+
+                <p>New Idea: <input type="text" id="newIdeaInput" value="New Idea" /></p>
+                <footer>
+                  <a href="#" id="call_staffAddIdea" class="button special">Staff Add Idea</a>
+                </footer>
 
                 <p><span id="UnconfirmedIdeaCountCall">0</span><p>
                   <footer>

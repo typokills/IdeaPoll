@@ -6,10 +6,6 @@ contract Lottery {
     uint private number;
 
 
-    // constructor() public {
-    //     owner = msg.sender;
-    // }
-
     function setNumber(uint _number) public {
         number = _number;
     }
@@ -70,6 +66,7 @@ contract Lottery {
     staffAccount[msg.sender] = true;
     expiration = 1000;
     staffAddIdea("Test Idea");
+    vote(1);
   }
 
   //Staff has the ability to extend the duration of the opencall (DONE)
@@ -98,22 +95,23 @@ contract Lottery {
     return verifiedAcc[resident];
   }
 
-  // Checks # confirmed ideas
+  // Checks # confirmed ideas (DONE)
   function getConfirmedIdeaCount() view public returns (uint){
     return confirmedIdeaCount;
   }
-  
-  // Checks # unconfirmed ideas
+
+  // Checks # unconfirmed ideas (DONE)
   function getUnconfirmedIdeaCount() view public returns (uint){
     return unconfirmedIdeaCount;
   }
 
-  //Ideas added by the staff are automatically confirmed
+  //Ideas added by the staff are automatically confirmed (DONE)
   function staffAddIdea(string memory _newIdea) public {
     //require(staffAccount[msg.sender] == true);
     confirmedIdeaCount ++;
     confirmedIdeas[confirmedIdeaCount] = Idea(confirmedIdeaCount, _newIdea, 0);
-    emit confirmedIdeaCreated(confirmedIdeaCount, _newIdea, 0);}
+    emit confirmedIdeaCreated(confirmedIdeaCount, _newIdea, 0);
+  }
 
   //Ideas added by residents need to be confirmed by the staff
   function residentAddIdea(string memory _newIdea) public{
@@ -121,7 +119,8 @@ contract Lottery {
     require(now <= expiration);
     require(unconfirmedIdeaCount < 9); // Ensures residents can only submit 9 ideas
     unconfirmedIdeaCount ++;
-    unconfirmedIdeas[unconfirmedIdeaCount] = Idea(unconfirmedIdeaCount,_newIdea,0);}
+    unconfirmedIdeas[unconfirmedIdeaCount] = Idea(unconfirmedIdeaCount,_newIdea,0);
+  }
     
   //Function for staff to approve unconfirmed ideas
   function approveIdea(uint index) private {
@@ -135,11 +134,16 @@ contract Lottery {
     delete unconfirmedIdeas[index];
   }
 
+  // Checks votes for a CONFIRMED IDEA
+  function getVotes(uint index) view public returns(uint){
+    return confirmedIdeas[index].voteCount;
+  }
+
   event votedIdea(
     uint id,
     string details,
-    uint voteCount
-  );
+    uint voteCount);
+  
   //Function to allow residents to vote on their favourite idea
   function vote(uint indexChoice) public{
     //require(voters[msg.sender] == false);
