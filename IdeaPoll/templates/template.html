@@ -92,6 +92,26 @@
                           }
                         });
                     });
+                    $("a#call_getConfirmedIdeaCount").click(function(){
+                        contractInstance.getConfirmedIdeaCount(function(error, result){
+                          if (error) {
+                              alert("Please, connect to the network");
+                              reject(error);
+                          } else {
+                              $("span#confirmedIdeaCountCall").text(result);
+                          }
+                        });
+                    });
+                    $("a#call_getUnconfirmedIdeaCount").click(function(){
+                        contractInstance.getUnconfirmedIdeaCount(function(error, result){
+                          if (error) {
+                              alert("Please, connect to the network");
+                              reject(error);
+                          } else {
+                              $("span#UnconfirmedIdeaCountCall").text(result);
+                          }
+                        });
+                    });
                 }
                 else {
                     alert("Please, install Metamask!");
@@ -122,7 +142,18 @@
               <article>
   				            <header>
   								<h3>Number</h3>
-  							</header>
+                </header>
+
+                <p><span id="UnconfirmedIdeaCountCall">0</span><p>
+                  <footer>
+                    <a href="#" id="call_getUnconfirmedIdeaCount" class="button special">Get UnconfirmedIdeaCount</a>
+                </footer>
+
+                <p><span id="confirmedIdeaCountCall">0</span><p>
+                  <footer>
+                    <a href="#" id="call_getConfirmedIdeaCount" class="button special">Get confirmedIdeaCount</a>
+                </footer>
+
   							<p><span id="number">0</span><p>
   							<footer>
   								<a href="#" id="call_getNumber" class="button special">Get number</a>
@@ -159,6 +190,8 @@
                   <footer>
                     <a href="#" id="call_callVerified" class="button special">Call Verified Address</a>
                   </footer>
+
+
 
   						</article>
             </div>

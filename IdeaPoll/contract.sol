@@ -55,12 +55,9 @@ contract Lottery {
   event confirmedIdeaCreated(
     uint id,
     string details,
-    uint voteCount
-  );
-
+    uint voteCount);
   event votedIdea(
-    uint voteCount
-  );
+    uint voteCount);
 
   event newResident(
     address secret
@@ -87,7 +84,7 @@ contract Lottery {
     return expiration;
   }
 
-  // For staff to add resident's address before the poll to allow them to vote
+  // For staff to add resident's address before the poll to allow them to vote (DONE)
   function addVerified(address _newresident) public{
     require(staffAccount[msg.sender] == true);
 
@@ -96,9 +93,21 @@ contract Lottery {
     emit newResident(_newresident); 
   }
 
-  function callVerified(address resident)view public returns (bool){
+  // Checks if verified address has true Bool (DONE)
+  function callVerified(address resident)view public returns (bool){ 
     return verifiedAcc[resident];
   }
+
+  // Checks # confirmed ideas
+  function getConfirmedIdeaCount() view public returns (uint){
+    return confirmedIdeaCount;
+  }
+  
+  // Checks # unconfirmed ideas
+  function getUnconfirmedIdeaCount() view public returns (uint){
+    return unconfirmedIdeaCount;
+  }
+
   //Ideas added by the staff are automatically confirmed
   function staffAddIdea(string memory _newIdea) public {
     //require(staffAccount[msg.sender] == true);
