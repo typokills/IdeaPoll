@@ -82,6 +82,10 @@ contract Lottery {
     expiration = expiration + duration;
   }
 
+  function getExpiration() view public returns (uint){
+    return expiration;
+  }
+
   // For staff to add resident's address before the poll to allow them to vote
   function addVerified(address _newresident) public{
     require(staffAccount[msg.sender] == true);

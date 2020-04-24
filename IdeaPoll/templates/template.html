@@ -50,6 +50,26 @@
                           }
                         });
                     });
+                    $("a#call_getExpiration").click(function(){
+                        contractInstance.getExpiration(function(error, result){
+                          if (error) {
+                              alert("Please, connect to the network");
+                              reject(error);
+                          } else {
+                              $("span#expiration").text(result);
+                          }
+                        });
+                    });
+
+                    $("a#call_extend").click(function(){
+                        var extension = $("input#extension").val();
+                        contractInstance.extend(extension, {from:web3.eth.accounts[0]}, function(error, result){
+                          if (error) {
+                              alert("Please, connect to the network");
+                              reject(error);
+                          }
+                        });
+                    });
                 }
                 else {
                     alert("Please, install Metamask!");
@@ -96,7 +116,18 @@
   							<p><span id="owner">None</span><p>
   							<footer>
   								<a href="#" id="call_getOwner" class="button special">Get owner</a>
-  							</footer>
+                </footer>
+
+  							<p><span id="expiration">0</span><p>
+                  <footer>
+                    <a href="#" id="call_getExpiration" class="button special">Get Expiration</a>
+                  </footer>
+
+                <p>Extend by: <input type="text" id="extension" value="0" /></p>
+                  <footer>
+                   <a href="#" id="call_extend" class="button special">Extend duration</a>
+                  </footer>
+
   						</article>
             </div>
   				</div>
