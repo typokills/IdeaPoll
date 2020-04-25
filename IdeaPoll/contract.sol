@@ -2,28 +2,34 @@ pragma solidity >= 0.4.24;
 
 contract Lottery {
 
-    address private owner;
-    uint private number;
+  address private owner;
+  uint private number;
 
-
-    function setNumber(uint _number) public {
-        number = _number;
-    }
-
-    function getNumber() view public returns(uint) {
-        return(number);
-    }
-
-    function getOwner() view public returns(address){
-        return(owner);
-    }
-
-    //Model an Idea
+  //Model an Idea
   struct Idea {
-		uint id;
-		string details;
-		uint voteCount;
-	}
+    uint id;
+    string details;
+    uint voteCount;
+  }
+
+  event votedIdea(
+    uint id,
+    string details,
+    uint voteCount
+  );
+  function setNumber(uint _number) public {
+      number = _number;
+  }
+
+  function getNumber() view public returns(uint) {
+      return(number);
+  }
+
+  function getOwner() view public returns(address){
+      return(owner);
+  }
+
+
 
   //Store non-staff accounts that have voted
   mapping(address => bool) public voters;
@@ -57,8 +63,9 @@ contract Lottery {
 
   event newResident(
     address secret
-    );
+  );
 
+  // Constructor for the contract
   constructor() public{
     // Add government account to the staffAccount list
     owner = msg.sender;
@@ -66,6 +73,7 @@ contract Lottery {
     staffAccount[msg.sender] = true;
     expiration = 1000;
     staffAddIdea("Test Idea");
+    staffAddUnconfirmedIdea("Test Unconfirmed Idea");
     vote(1);
   }
 
@@ -113,7 +121,15 @@ contract Lottery {
     emit confirmedIdeaCreated(confirmedIdeaCount, _newIdea, 0);
   }
 
-  //Ideas added by residents need to be confirmed by the staff
+  //For Staff to Test unconfirmedIdea functions (DONE)
+  function staffAddUnconfirmedIdea(string memory _newIdea) public {
+    require(staffAccount[msg.sender] == true);
+    unconfirmedIdeaCount ++;
+    unconfirmedIdeas[unconfirmedIdeaCount] = Idea(unconfirmedIdeaCount, _newIdea, 0);
+    emit confirmedIdeaCreated(confirmedIdeaCount, _newIdea, 0);
+  }
+
+  //Ideas added by residents need to be confirmed by the staff (DONE)
   function residentAddIdea(string memory _newIdea) public{
     require(verifiedAcc[msg.sender]==true);
     require(now <= expiration);
@@ -121,8 +137,8 @@ contract Lottery {
     unconfirmedIdeaCount ++;
     unconfirmedIdeas[unconfirmedIdeaCount] = Idea(unconfirmedIdeaCount,_newIdea,0);
   }
-    
-  //Function for staff to approve unconfirmed ideas
+
+  //Function for staff to approve unconfirmed ideas (DONE)
   function approveIdea(uint index) private {
     require(staffAccount[msg.sender] == true);
     require(confirmedIdeaCount < 10); //Ensures only 10 confirmed ideas
@@ -131,20 +147,15 @@ contract Lottery {
     confirmedIdeas[confirmedIdeaCount] = unconfirmedIdeas[index];
 
     unconfirmedIdeaCount --;
-    delete unconfirmedIdeas[index];
+    //delete unconfirmedIdeas[index];
   }
 
-  // Checks votes for a CONFIRMED IDEA
+  // Checks votes for a CONFIRMED IDEA (DONE)
   function getVotes(uint index) view public returns(uint){
     return confirmedIdeas[index].voteCount;
   }
 
-  event votedIdea(
-    uint id,
-    string details,
-    uint voteCount);
-  
-  //Function to allow residents to vote on their favourite idea
+  //Function to allow residents to vote on their favourite idea (DONE)
   function vote(uint indexChoice) public{
     //require(voters[msg.sender] == false);
 
@@ -155,9 +166,11 @@ contract Lottery {
     emit votedIdea(confirmedIdeas[indexChoice].voteCount);
   }
 
-  //Allows the staff to close the poll and not accept any more votes
+  //Allows the staff to close the poll and not accept any more votes (DONE)
   function closePoll() public{
     require(staffAccount[msg.sender] == true);
+    
+    expiration = 0;
 
   }
 

@@ -31,6 +31,7 @@
                           }
                         });
                     });
+                    
                     $("a#call_getNumber").click(function(){
                         contractInstance.getNumber(function(error, result){
                           if (error) {
@@ -41,6 +42,7 @@
                           }
                         });
                     });
+                    
                     $("a#call_setNumber").click(function(){
                         var newNumber = $("input#number").val();
                         contractInstance.setNumber(newNumber, {from:web3.eth.accounts[0]}, function(error, result){
@@ -50,6 +52,7 @@
                           }
                         });
                     });
+                    
                     $("a#call_getExpiration").click(function(){
                         contractInstance.getExpiration(function(error, result){
                           if (error) {
@@ -92,6 +95,7 @@
                           }
                         });
                     });
+
                     $("a#call_getConfirmedIdeaCount").click(function(){
                         contractInstance.getConfirmedIdeaCount(function(error, result){
                           if (error) {
@@ -102,6 +106,7 @@
                           }
                         });
                     });
+
                     $("a#call_getUnconfirmedIdeaCount").click(function(){
                         contractInstance.getUnconfirmedIdeaCount(function(error, result){
                           if (error) {
@@ -112,6 +117,7 @@
                           }
                         });
                     });
+                    
                     $("a#call_staffAddIdea").click(function(){
                         var newIdeaInput = $("input#newIdeaInput").val();
                         contractInstance.staffAddIdea(newIdeaInput, {from:web3.eth.accounts[0]}, function(error, result){
@@ -121,17 +127,68 @@
                           }
                         });
                     });
+                    
                     $("a#call_getVotes").click(function(){
                         var index = $("input#voteCallIndex").val();
                         contractInstance.getVotes(index,{from:web3.eth.accounts[0]},function(error, result){
                           if (error) {
-                              alert("Please, connect to the network");
+                              alert("Invalid Index");
                               reject(error);
                           } else {
                               $("span#ideaVoteCountCall").text(result);
                           }
                         });
                     });
+                    
+                    $("a#call_residentAddIdea").click(function(){
+                        var newResidentIdea = $("input#newResidentIdea").val();
+                        contractInstance.residentAddIdea(newResidentIdea, {from:web3.eth.accounts[0]}, function(error, result){
+                          if (error) {
+                              alert("Account has not been verified");
+                              reject(error);
+                          }
+                        });
+                    });
+
+                    $("a#call_staffAddUnconfirmedIdea").click(function(){
+                        var newStaffUnconfirmedIdea = $("input#newStaffUnconfirmedIdea").val();
+                        contractInstance.staffAddUnconfirmedIdea(newStaffUnconfirmedIdea, {from:web3.eth.accounts[0]}, function(error, result){
+                          if (error) {
+                              alert("Error?");
+                              reject(error);
+                          }
+                        });
+                    });
+
+                    $("a#call_closePoll").click(function(){
+                        contractInstance.closePoll(function(error, result){
+                          if (error) {
+                              alert("Can't Close Poll?");
+                              reject(error);
+                          }
+                        });
+                    });
+
+                    $("a#call_vote").click(function(){
+                        var index = $("input#voteIndex").val();
+                        contractInstance.vote(voteIndex, {from:web3.eth.accounts[0]}, function(error, result){
+                          if (error) {
+                              alert("Error Voting");
+                              reject(error);
+                          }
+                        });
+                    });
+
+                    $("a#call_approveIdea").click(function(){
+                        var index = $("input#approveIndex").val();
+                        contractInstance.approveIdea(index, {from:web3.eth.accounts[0]}, function(error, result){
+                          if (error) {
+                              alert("Error Approving");
+                              reject(error);
+                          }
+                        });
+                    });
+
                     
                 }
                 else {
@@ -164,6 +221,30 @@
   				            <header>
   								<h3>CONTRACT FUNCTIONS:</h3>
                 </header>
+
+                <p>Vote Index<input type="text" id="voteIndex" value="0" /></p>
+                <footer>
+                  <a href="#" id="call_vote" class="button special">Vote!</a>
+                </footer>
+
+                <footer>
+                  <a href="#" id="call_closePoll" class="button special">Close Poll</a>
+                </footer>
+
+                <p>Approve Index <input type="text" id="approveIndex" value="0" /></p>
+                <footer>
+                  <a href="#" id="call_approveIdea" class="button special">Approve Idea</a>
+                </footer>
+
+                <p>New Staff Unconfirmed Idea: <input type="text" id="newStaffUnconfirmedIdea" value="Insert New Idea Here" /></p>
+                <footer>
+                  <a href="#" id="call_staffAddUnconfirmedIdea" class="button special">Add Unconfirmed Idea</a>
+                </footer>
+
+                <p>New Resident Idea: <input type="text" id="newResidentIdea" value="Insert New Idea Here" /></p>
+                <footer>
+                  <a href="#" id="call_residentAddIdea" class="button special">Resident Add Idea</a>
+                </footer>
                 
                 <p><span id="ideaVoteCountCall">None</span><p></p>
                 <p>Index: <input type="text" id="voteCallIndex" value="0" /></p>
