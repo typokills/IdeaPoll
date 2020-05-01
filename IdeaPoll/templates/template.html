@@ -21,37 +21,37 @@
                     var contractABI = web3.eth.contract(JSON.parse('{{contractABI | safe}}'));
                     var contractInstance = contractABI.at(sc_address);
                     contract = contractInstance;
-                    $("a#call_getOwner").click(function(){
-                        contractInstance.getOwner(function(error, result){
-                          if (error) {
-                              alert("Please, connect to the network");
-                              reject(error);
-                          } else {
-                              $("span#owner").text(result);
-                          }
-                        });
-                    });
+                    // $("a#call_getOwner").click(function(){
+                    //     contractInstance.getOwner(function(error, result){
+                    //       if (error) {
+                    //           alert("Please, connect to the network");
+                    //           reject(error);
+                    //       } else {
+                    //           $("span#owner").text(result);
+                    //       }
+                    //     });
+                    // });
                     
-                    $("a#call_getNumber").click(function(){
-                        contractInstance.getNumber(function(error, result){
-                          if (error) {
-                              alert("Please, connect to the network");
-                              reject(error);
-                          } else {
-                              $("span#number").text(result);
-                          }
-                        });
-                    });
+                    // $("a#call_getNumber").click(function(){
+                    //     contractInstance.getNumber(function(error, result){
+                    //       if (error) {
+                    //           alert("Please, connect to the network");
+                    //           reject(error);
+                    //       } else {
+                    //           $("span#number").text(result);
+                    //       }
+                    //     });
+                    // });
                     
-                    $("a#call_setNumber").click(function(){
-                        var newNumber = $("input#number").val();
-                        contractInstance.setNumber(newNumber, {from:web3.eth.accounts[0]}, function(error, result){
-                          if (error) {
-                              alert("Please, connect to the network");
-                              reject(error);
-                          }
-                        });
-                    });
+                    // $("a#call_setNumber").click(function(){
+                    //     var newNumber = $("input#number").val();
+                    //     contractInstance.setNumber(newNumber, {from:web3.eth.accounts[0]}, function(error, result){
+                    //       if (error) {
+                    //           alert("Please, connect to the network");
+                    //           reject(error);
+                    //       }
+                    //     });
+                    // });
                     
                     $("a#call_getExpiration").click(function(){
                         contractInstance.getExpiration(function(error, result){
@@ -170,8 +170,8 @@
                     });
 
                     $("a#call_vote").click(function(){
-                        var index = $("input#voteIndex").val();
-                        contractInstance.vote(voteIndex, {from:web3.eth.accounts[0]}, function(error, result){
+                        var indexChoice = $("input#indexChoice").val();
+                        contractInstance.vote(indexChoice, {from:web3.eth.accounts[0]}, function(error, result){
                           if (error) {
                               alert("Error Voting");
                               reject(error);
@@ -222,13 +222,19 @@
   								<h3>CONTRACT FUNCTIONS:</h3>
                 </header>
 
-                <p>Vote Index<input type="text" id="voteIndex" value="0" /></p>
-                <footer>
-                  <a href="#" id="call_vote" class="button special">Vote!</a>
+                <p><span id="UnconfirmedIdeaCountCall">0</span><p>
+                  <footer>
+                    <a href="#" id="call_getUnconfirmedIdeaCount" class="button special">Get UnconfirmedIdeaCount</a>
                 </footer>
 
+                <p><span id="confirmedIdeaCountCall">0</span><p>
+                  <footer>
+                    <a href="#" id="call_getConfirmedIdeaCount" class="button special">Get confirmedIdeaCount</a>
+                </footer>
+
+                <p>Vote Choice<input type="text" id="indexChoice" value="0" /></p>
                 <footer>
-                  <a href="#" id="call_closePoll" class="button special">Close Poll</a>
+                  <a href="#" id="call_vote" class="button special">Vote!</a>
                 </footer>
 
                 <p>Approve Index <input type="text" id="approveIndex" value="0" /></p>
@@ -257,17 +263,9 @@
                   <a href="#" id="call_staffAddIdea" class="button special">Staff Add Idea</a>
                 </footer>
 
-                <p><span id="UnconfirmedIdeaCountCall">0</span><p>
-                  <footer>
-                    <a href="#" id="call_getUnconfirmedIdeaCount" class="button special">Get UnconfirmedIdeaCount</a>
-                </footer>
 
-                <p><span id="confirmedIdeaCountCall">0</span><p>
-                  <footer>
-                    <a href="#" id="call_getConfirmedIdeaCount" class="button special">Get confirmedIdeaCount</a>
-                </footer>
 
-  							<p><span id="number">0</span><p>
+  							<!-- <p><span id="number">0</span><p>
   							<footer>
   								<a href="#" id="call_getNumber" class="button special">Get number</a>
   							</footer>
@@ -282,7 +280,7 @@
   							<p><span id="owner">None</span><p>
   							<footer>
   								<a href="#" id="call_getOwner" class="button special">Get owner</a>
-                </footer>
+                </footer> -->
 
   							<p><span id="expiration">0</span><p>
                   <footer>
@@ -301,9 +299,12 @@
                   <p><span id="verifiedAddressCall">Nil</span><p></p>
                   <p>Index: <input type="text" id="index" value="Index" /></p>
                   <footer>
-                    <a href="#" id="call_callVerified" class="button special">Call Verified Address</a>
+                    <a href="#" id="call_callVerified" class="button special">Check if address is verified</a>
                   </footer>
 
+                  <footer>
+                    <a href="#" id="call_closePoll" class="button special">Close Poll</a>
+                  </footer>
 
 
   						</article>

@@ -17,19 +17,10 @@ contract Lottery {
     string details,
     uint voteCount
   );
-  function setNumber(uint _number) public {
-      number = _number;
-  }
-
-  function getNumber() view public returns(uint) {
-      return(number);
-  }
-
-  function getOwner() view public returns(address){
-      return(owner);
-  }
 
 
+  //Winning Idea
+  string winningIdea;
 
   //Store non-staff accounts that have voted
   mapping(address => bool) public voters;
@@ -37,7 +28,6 @@ contract Lottery {
   //Add or View Ideas
   mapping (uint => Idea) unconfirmedIdeas;
   mapping(uint => Idea) confirmedIdeas;
-  Idea winningIdea;
 
   //Staff account with admin rights
   mapping(address => bool) public staffAccount;
@@ -51,7 +41,7 @@ contract Lottery {
   
   //Duration for opencall for ideas period
   uint public expiration;
-
+  uint public contractExpiration;
   mapping(uint => Idea) public Ideas;
 
   event confirmedIdeaCreated(
@@ -72,6 +62,7 @@ contract Lottery {
     
     staffAccount[msg.sender] = true;
     expiration = 1000;
+    contractExpiration = 10000;
     staffAddIdea("Test Idea");
     staffAddUnconfirmedIdea("Test Unconfirmed Idea");
     vote(1);
@@ -80,7 +71,7 @@ contract Lottery {
   //Staff has the ability to extend the duration of the opencall (DONE)
   function extend(uint duration) public {
     require(staffAccount[msg.sender] == true);
-
+    require (contractExpiration > 0);
     expiration = expiration + duration;
   }
 
@@ -92,8 +83,9 @@ contract Lottery {
   // For staff to add resident's address before the poll to allow them to vote (DONE)
   function addVerified(address _newresident) public{
     require(staffAccount[msg.sender] == true);
-
+    require (contractExpiration > 0);
     verifiedAcc[_newresident] = true;
+    voters[_newresident] = false;
 
     emit newResident(_newresident); 
   }
@@ -115,7 +107,8 @@ contract Lottery {
 
   //Ideas added by the staff are automatically confirmed (DONE)
   function staffAddIdea(string memory _newIdea) public {
-    //require(staffAccount[msg.sender] == true);
+    require(staffAccount[msg.sender] == true);
+    require (contractExpiration > 0);
     confirmedIdeaCount ++;
     confirmedIdeas[confirmedIdeaCount] = Idea(confirmedIdeaCount, _newIdea, 0);
     emit confirmedIdeaCreated(confirmedIdeaCount, _newIdea, 0);
@@ -132,22 +125,25 @@ contract Lottery {
   //Ideas added by residents need to be confirmed by the staff (DONE)
   function residentAddIdea(string memory _newIdea) public{
     require(verifiedAcc[msg.sender]==true);
-    require(now <= expiration);
+    require(expiration > 0);
+    require (contractExpiration > 0);
     require(unconfirmedIdeaCount < 9); // Ensures residents can only submit 9 ideas
+    
     unconfirmedIdeaCount ++;
     unconfirmedIdeas[unconfirmedIdeaCount] = Idea(unconfirmedIdeaCount,_newIdea,0);
   }
 
   //Function for staff to approve unconfirmed ideas (DONE)
-  function approveIdea(uint index) private {
+  function approveIdea(uint index) public {
     require(staffAccount[msg.sender] == true);
     require(confirmedIdeaCount < 10); //Ensures only 10 confirmed ideas
+    require (contractExpiration > 0);
 
     confirmedIdeaCount ++;
     confirmedIdeas[confirmedIdeaCount] = unconfirmedIdeas[index];
 
     unconfirmedIdeaCount --;
-    //delete unconfirmedIdeas[index];
+    delete unconfirmedIdeas[index];
   }
 
   // Checks votes for a CONFIRMED IDEA (DONE)
@@ -157,8 +153,8 @@ contract Lottery {
 
   //Function to allow residents to vote on their favourite idea (DONE)
   function vote(uint indexChoice) public{
-    //require(voters[msg.sender] == false);
-
+    require(voters[msg.sender] == false);
+    require (contractExpiration > 0);
     voters[msg.sender] = true;
 
     confirmedIdeas[indexChoice].voteCount ++;
@@ -169,9 +165,9 @@ contract Lottery {
   //Allows the staff to close the poll and not accept any more votes (DONE)
   function closePoll() public{
     require(staffAccount[msg.sender] == true);
-    
+    require (contractExpiration > 0);
+    contractExpiration = 0;
     expiration = 0;
-
   }
 
 }
